@@ -39,7 +39,7 @@ def post():
     if errors:
         return response(400, errors)
 
-    new_continent = Continent(code, name)
+    new_continent = Continent(code=code, name=name)
     new_continent.save()
 
     return response(201)
@@ -59,12 +59,11 @@ def put(code):
 
 
 @continents.route('/<int:code>', methods=['DELETE'])
-def put(code):
+def delete(code):
     continent = Continent.query.filter_by(code=code).first()
     if continent is None:
         return response(404)
 
     continent.delete()
-
     return response(200)
 
