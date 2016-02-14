@@ -55,7 +55,7 @@ def put(code):
     if name:
         continent.name = name
 
-    return response(204)
+    return response(200)
 
 
 @continents.route('/<int:code>', methods=['DELETE'])
@@ -64,9 +64,7 @@ def put(code):
     if continent is None:
         return response(404)
 
-    name = request.form.get('name')
-    if name:
-        continent.name = name
+    continent.delete()
 
-    return response(204)
+    return response(200)
 

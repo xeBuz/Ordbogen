@@ -16,6 +16,10 @@ class Continent(db.Model):
         db.session.add(self)
         db.session.commit()
 
+    def delete(self):
+        db.session.delete(self)
+        db.session.commit()
+
     @property
     def serialize(self):
         return {
@@ -24,4 +28,4 @@ class Continent(db.Model):
         }
 
     def __repr__(self):
-        return self.serialize
+        return self.code
