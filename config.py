@@ -13,7 +13,6 @@ class Development(Config):
     DEBUG = True
     TESTING = True
     SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(basedir + database_path, 'app.db')
-    print SQLALCHEMY_DATABASE_URI
     SQLALCHEMY_MIGRATE_REPO = os.path.join(basedir, 'db_repository')
 
 
