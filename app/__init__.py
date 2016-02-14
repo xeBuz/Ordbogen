@@ -8,5 +8,7 @@ db = SQLAlchemy(app)
 db.init_app(app)
 
 from app.api.continents import continents
-app.register_blueprint(continents)
+from app.api.countries import countries
 
+app.register_blueprint(continents)
+app.register_blueprint(countries)
