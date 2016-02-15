@@ -105,16 +105,92 @@ def post():
 
 @countries.route('/<string:iso_code>', methods=['PUT'])
 def put(iso_code):
-    return "PUT"
-    # continent = Continent.query.filter_by(code=code).first()
-    # if continent is None:
-    #     return response(404)
-    #
-    # name = request.form.get('name')
-    # if name:
-    #     continent.name = name
-    #
-    # return response(200)
+    errors = []
+    iso_code = str(iso_code).upper()
+    country = Country.query.filter_by(iso_code=iso_code).first()
+
+    if country is None:
+        return response(404)
+
+    iso_code_long = request.form.get('iso_code_long')
+    short_name = request.form.get('short_name')
+    formal_name = request.form.get('formal_name')
+    demonym = request.form.get('demonym')
+    country_code = request.form.get('country_code')
+    continental_code = request.form.get('continental_code')
+    coordinates = request.form.get('coordinates')
+    elevation = request.form.get('elevation')
+    elevation_low = request.form.get('elevation_low')
+    area = request.form.get('area')
+    land = request.form.get('land')
+    fertility = request.form.get('fertility')
+    population = request.form.get('population')
+    population_urban = request.form.get('population_urban')
+    itu = request.form.get('itu')
+    web = request.form.get('web')
+    gis = request.form.get('gis')
+    statistics = request.form.get('statistics')
+    flag = request.form.get('flag'),
+    government = request.form.get('government')
+    boundary_box = request.form.get('boundary_box')
+    currency = request.form.get('currency')
+
+    if continental_code:
+        validate = Continent.query.filter_by(code=continental_code).first()
+        if validate is None:
+            errors.append("The continental_code doesn't exists")
+    if errors:
+        return response(400, errors)
+
+
+    if iso_code_long:
+        country.iso_code_long = iso_code_long
+    if short_name:
+        country.short_name = short_name
+    if formal_name:
+        country.formal_name = formal_name
+    if demonym:
+        country.demonym = demonym
+    if country_code:
+        country.country_code = country_code
+    if continental_code:
+        country.continental_code = continental_code
+    if coordinates:
+        country.coordinates = coordinates
+    if elevation:
+        country.elevation = elevation
+    if elevation_low:
+        country.elevation_low = elevation_low
+    if area:
+        country.area = area
+    if land:
+        country.land = land
+    if fertility:
+        country.fertility = fertility
+    if population:
+        country.population = population
+    if population_urban:
+        country.population_urban = population_urban
+    if itu:
+        country.itu = itu
+    if web:
+        country.web = web
+    if gis:
+        country.gis = gis
+    if statistics:
+        country.statistics = statistics
+    if flag:
+        country.flag = flag
+    if government:
+        country.government = government
+    if boundary_box:
+        country.boundary_box = boundary_box
+    if currency:
+        country.currency = currency
+
+    country.save()
+
+    return response(200)
 
 
 @countries.route('/<string:isocode>', methods=['DELETE'])
