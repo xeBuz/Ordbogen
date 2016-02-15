@@ -1,6 +1,7 @@
 from app.helper import response
 from flask import Blueprint, request
 from app.models.countries import Country
+from app.models.continents import Continent
 
 countries = Blueprint('countries', __name__, url_prefix='/api/countries')
 
@@ -33,28 +34,73 @@ def get(iso_code=None):
 
 @countries.route('/', methods=['POST'])
 def post():
-    code = request.form.get('code')
-    return "POST"
-    # errors = []
-    # code = request.form.get('code')
-    # name = request.form.get('name')
-    #
-    # if name is None:
-    #     errors.append("Invalid name value")
-    # if code is None:
-    #     errors.append("Invalid code value")
-    # else:
-    #     validate = Continent.query.filter_by(code=code).first()
-    #     if validate:
-    #         errors.append("The code already exists")
-    #
-    # if errors:
-    #     return response(400, errors)
-    #
-    # new_continent = Continent(code=code, name=name)
-    # new_continent.save()
-    #
-    # return response(201)
+    errors = []
+    iso_code = request.form.get('iso_code')
+    iso_code_long = request.form.get('iso_code_long')
+    short_name = request.form.get('short_name')
+    formal_name = request.form.get('formal_name')
+    demonym = request.form.get('demonym')
+    country_code = request.form.get('country_code')
+    continental_code = request.form.get('continental_code')
+    coordinates = request.form.get('coordinates')
+    elevation = request.form.get('elevation')
+    elevation_low = request.form.get('elevation_low')
+    area = request.form.get('area')
+    land = request.form.get('land')
+    fertility = request.form.get('fertility')
+    population = request.form.get('population')
+    population_urban = request.form.get('population_urban')
+    itu = request.form.get('itu')
+    web = request.form.get('web')
+    gis = request.form.get('gis')
+    statistics = request.form.get('statistics')
+    flag = request.form.get('flag'),
+    government = request.form.get('government')
+    boundary_box = request.form.get('boundary_box')
+    currency = request.form.get('currency')
+
+    if iso_code is None:
+        errors.append("Invalid iso_code value")
+    else:
+        validate = Country.query.filter_by(iso_code=iso_code).first()
+        if validate:
+            errors.append("The iso_code already exists")
+    if continental_code:
+        validate = Continent.query.filter_by(code=continental_code).first()
+        if validate is None:
+            errors.append("The continental_code doesn't exists")
+
+    if errors:
+        return response(400, errors)
+
+    new_continent = Country(
+        iso_code=iso_code,
+        iso_code_long=iso_code_long,
+        short_name=short_name,
+        formal_name=formal_name,
+        demonym=demonym,
+        country_code=country_code,
+        continental_code=continental_code,
+        coordinates=coordinates,
+        elevation=elevation,
+        elevation_low=elevation_low,
+        area=area,
+        land=land,
+        fertility=fertility,
+        population=population,
+        population_urban=population_urban,
+        itu=itu,
+        web=web,
+        gis=gis,
+        statistics=statistics,
+        flag=flag,
+        government=government,
+        boundary_box=boundary_box,
+        currency=currency,
+    )
+    new_continent.save()
+
+    return response(201)
 
 
 @countries.route('/<string:iso_code>', methods=['PUT'])
