@@ -142,7 +142,6 @@ def put(iso_code):
     if errors:
         return response(400, errors)
 
-
     if iso_code_long:
         country.iso_code_long = iso_code_long
     if short_name:
@@ -189,11 +188,10 @@ def put(iso_code):
         country.currency = currency
 
     country.save()
-
     return response(200)
 
 
-@countries.route('/<string:isocode>', methods=['DELETE'])
+@countries.route('/<string:iso_code>', methods=['DELETE'])
 def delete(iso_code):
     country = Country.query.filter_by(iso_code=iso_code).first()
     if country is None:
