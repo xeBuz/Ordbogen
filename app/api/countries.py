@@ -10,15 +10,25 @@ countries = Blueprint('countries', __name__, url_prefix='/api/countries')
 def get(iso_code=None):
 
     if iso_code:
-        query_countries = Country.query.filter_by(iso_code=iso_code).all()
+        pagination = None
+        iso_code = str(iso_code).upper()
+        query_countries = Country.query.filter_by(iso_code=iso_code).first()
+
+        if query_countries is None:
+            return response(404)
+
     else:
-        query_countries = Country.query.all()
+        page = int(request.args.get('page', '1'))
+        count = int(request.args.get('count', '5'))
+        sort = request.args.get('sort', 'iso_code')
 
-    if len(query_countries) == 0:
-        return response(404)
+        pagination = Country.query.order_by(sort).paginate(page, count, False)
+        query_countries = pagination.items
 
-    json_list = [i.serialize for i in query_countries]
-    return response(200, json_list)
+        if len(query_countries) == 0:
+            return response(404)
+
+    return response(200, query_countries, pagination, request.base_url)
 
 
 @countries.route('/', methods=['POST'])
@@ -63,11 +73,10 @@ def put(iso_code):
 
 @countries.route('/<string:isocode>', methods=['DELETE'])
 def delete(iso_code):
-    return "DELETE"
-    # continent = Country.query.filter_by(code=code).first()
-    # if continent is None:
-    #     return response(404)
-    #
-    # continent.delete()
-    # return response(200)
+    country = Country.query.filter_by(iso_code=iso_code).first()
+    if country is None:
+        return response(404)
+
+    country.delete()
+    return response(200)
 

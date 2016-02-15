@@ -23,7 +23,3 @@ class BaseModel(db.Model):
         db.session.delete(self)
         db.session.commit()
 
-    @property
-    @abstractmethod
-    def serialize(self):
-        return

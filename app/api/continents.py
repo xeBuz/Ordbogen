@@ -10,15 +10,18 @@ continents = Blueprint('continents', __name__, url_prefix='/api/continents')
 def get(code=None):
 
     if code:
-        query_continents = Continent.query.filter_by(code=code).all()
+        query_continents = Continent.query.filter_by(code=code).first()
+
+        if query_continents is None:
+            return response(404)
+
     else:
         query_continents = Continent.query.all()
 
-    if len(query_continents) == 0:
-        return response(404)
+        if len(query_continents) == 0:
+            return response(404)
 
-    json_list = [i.serialize for i in query_continents]
-    return response(200, json_list)
+    return response(200, query_continents)
 
 
 @continents.route('/', methods=['POST'])

@@ -11,7 +11,7 @@ class Country(BaseModel):
     iso_code_long = db.Column(db.String(3))
     short_name = db.Column(db.String)
     formal_name = db.Column(db.String(128))
-    denonym = db.Column(db.String(128))
+    demonym = db.Column(db.String(128))
     country_code = db.Column(db.Integer)
     continental_code = db.Column(db.Integer, db.ForeignKey(Continent.code))
     continent = db.relation(Continent)
@@ -26,7 +26,7 @@ class Country(BaseModel):
     itu = db.Column(db.String(256))
     web = db.Column(db.String(256))
     gis = db.Column(db.String(256))
-    statics = db.Column(db.String(256))
+    statistics = db.Column(db.String(256))
     flag = db.Column(db.String(256))
     government = db.Column(db.String(128))
     boundary_box = db.Column(db.String(128))
@@ -42,11 +42,11 @@ class Country(BaseModel):
             'iso_code_long': self.iso_code_long,
             'short_name': self.short_name,
             'formal_name': self.formal_name,
-            'denonym': self.denonym,
+            'demonym': self.demonym,
             'country_code': self.country_code,
             'continental_code': self.continental_code,
-            'continent': self.continent,
-            'coordinates': self.coordinate,
+            # 'continent': self.continent.serialize,
+            'coordinates': self.coordinates,
             'elevation': self.elevation,
             'elevation_low': self.elevation_low,
             'area': self.area,
@@ -57,7 +57,7 @@ class Country(BaseModel):
             'ITU': self.itu,
             'web': self.web,
             'GIS': self.gis,
-            'statics': self.statics,
+            'statistics': self.statistics,
             'flag': self.flag,
             'government': self.government,
             'boundary_box': self.boundary_box,
