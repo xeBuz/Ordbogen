@@ -9,7 +9,7 @@ countries = Blueprint('countries', __name__, url_prefix='/api/countries')
 @countries.route('/', methods=['GET'])
 @countries.route('/<string:iso_code>', methods=['GET'])
 def get(iso_code=None):
-
+    allowed_sort = ['iso_code', 'short_name', 'country_code']
     if iso_code:
         pagination = None
         iso_code = str(iso_code).upper()
@@ -22,8 +22,20 @@ def get(iso_code=None):
         page = int(request.args.get('page', '1'))
         count = int(request.args.get('count', '5'))
         sort = request.args.get('sort', 'iso_code')
+        name = request.args.get('name')
 
-        pagination = Country.query.order_by(sort).paginate(page, count, False)
+        if sort not in allowed_sort:
+            return response(400, 'Invalid sort field')
+
+        if name:
+            if len(name) < 2:
+                return response(400, 'Minimum length allowed for name: 2')
+
+            pagination = Country.query.filter(Country.short_name.like(name + "%"))\
+                .order_by(sort).paginate(page, count, False)
+        else:
+            pagination = Country.query.order_by(sort).paginate(page, count, False)
+
         query_countries = pagination.items
 
         if len(query_countries) == 0:
@@ -35,6 +47,7 @@ def get(iso_code=None):
 @countries.route('/', methods=['POST'])
 def post():
     errors = []
+
     iso_code = request.form.get('iso_code')
     iso_code_long = request.form.get('iso_code_long')
     short_name = request.form.get('short_name')
