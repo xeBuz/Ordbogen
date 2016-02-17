@@ -15,6 +15,10 @@ class BaseModel(db.Model):
     def __repr__(self):
         return
 
+    @staticmethod
+    def columns(self):
+        return self.__table__.columns.keys()
+
     def save(self):
         db.session.add(self)
         db.session.commit()
