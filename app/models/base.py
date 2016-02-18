@@ -15,8 +15,7 @@ class BaseModel(db.Model):
     def __repr__(self):
         return
 
-    @staticmethod
-    def columns(self):
+    def get_columns(self):
         return self.__table__.columns.keys()
 
     def save(self):
