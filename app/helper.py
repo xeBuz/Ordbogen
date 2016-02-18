@@ -2,7 +2,7 @@ from flask import jsonify, request
 from httplib import responses as http_code
 
 
-class APIOrdbogen:
+class APIOrdbogen(object):
 
     json = {}
 
@@ -10,7 +10,7 @@ class APIOrdbogen:
         return True if code < 400 else False
 
     def _set_success(self, sucess=False):
-        self.json['success'] =  sucess
+        self.json['success'] = sucess
 
     def _set_status(self, code):
         self.json['status'] = {

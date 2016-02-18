@@ -43,7 +43,7 @@ class CountryAPI(MethodView, APIOrdbogen):
             if len(query_countries) == 0:
                 return self.response(404)
 
-        return self.response(200, query_countries, pagination, request.base_url)
+        return self.response(200, query_countries, pagination)
 
     def post(self):
         errors = []
