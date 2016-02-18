@@ -1,73 +1,61 @@
-from flask import jsonify
+from flask import jsonify, request
+from httplib import responses as http_code
 
 
-def response(code=200, data=None, pagination=None, url=None):
-    """
-    HTTP response Generator
+class APIOrdbogen:
 
-    :param code: Numeric HTTP code
-    :param data: Data
-    :param pagination: Pagination object
-    :param url: Base URL to build the pagination
-    :return: HTTP Response
-    """
     json = {}
-    messages = {
-        200: 'Success',
-        201: 'Created',
-        202: 'Accepted',
-        204: 'No Content',
-        400: 'Bad Request',
-        401: 'Unauthorized',
-        403: 'Forbidden',
-        404: 'Not Found',
-        406: 'Not Acceptable',
-        410: 'Gone',
-        422: 'Unprocesable entity',
-        500: 'Internal Error',
-        501: 'Not implemented',
-        503: 'Service Unavailable',
-        504: 'Gateway Timeout',
-        505: 'HTTP Version Not Supported'
-    }
 
-    success = True if code < 400 else False
+    def _is_success(self, code):
+        return True if code < 400 else False
 
-    json['success'] = success
-    json['status'] = {
-        'code': code,
-        'message': messages.get(code)
-    }
-    if data is not None:
-        if success:
-            if isinstance(data, list):
-                data = [i.serialize for i in data]
+    def _set_success(self, sucess=False):
+        self.json['success'] =  sucess
+
+    def _set_status(self, code):
+        self.json['status'] = {
+            'code': code,
+            'message': http_code.get(code, None)
+        }
+
+    def _set_data(self, data, success):
+
+        if data:
+            if success:
+                if isinstance(data, list):
+                    data = [i.serialize for i in data]
+                else:
+                    if hasattr(data, 'serialize'):
+                        data = data.serialize
+
+                self.json['data'] = data
             else:
-                if hasattr(data, 'serialize'):
-                    data = data.serialize
+                self.json['error'] = {
+                    'message': data
+                }
 
-            json['data'] = data
-        else:
-            json['error'] = {
-                'message': data
-            }
+    def _set_pagination(self, pagination):
+        if pagination:
+            pagination_links = {}
+            count = len(pagination.items)
+            link = "{}?count={}&page={}"
 
-    if pagination is not None:
-        pagination_links = {}
-        count = len(pagination.items)
-        link = "{}?count={}&page={}"
+            pagination_links['first'] = link.format(request.base_url, count, 1)
+            pagination_links['last'] = link.format(request.base_url, count, pagination.pages)
 
-        pagination_links['first'] = link.format(url, count, 1)
-        pagination_links['last'] = link.format(url, count, pagination.pages)
+            if pagination.has_next:
+                pagination_links['next'] = link.format(request.base_url, count, pagination.next_num)
+            if pagination.has_prev:
+                pagination_links['prev'] = link.format(request.base_url, count, pagination.prev_num)
 
-        if pagination.has_next:
-            pagination_links['next'] = link.format(url, count, pagination.next_num)
-        if pagination.has_prev:
-            pagination_links['prev'] = link.format(url, count, pagination.prev_num)
+            self.json['links'] = pagination_links
 
-        json['links'] = pagination_links
+    def response(self, code=200, data=None, pagination=None):
+        success =  self._is_success(code)
 
-    return jsonify(json), code
+        self._set_success(success)
+        self._set_status(code)
+        self._set_data(data, success)
+        self._set_pagination(pagination)
 
-
-
+        return jsonify(self.json), code

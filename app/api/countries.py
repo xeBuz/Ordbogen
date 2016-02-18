@@ -1,4 +1,4 @@
-from app.helper import response
+from app.helper import APIOrdbogen
 from flask import Blueprint, request
 from flask.views import MethodView
 from app.models.countries import Country
@@ -7,7 +7,7 @@ from app.models.continents import Continent
 countries = Blueprint('countries', __name__, url_prefix='/api/countries')
 
 
-class CountryAPI(MethodView):
+class CountryAPI(MethodView, APIOrdbogen):
 
     def get(self, iso_code):
         allowed_sort = ['iso_code', 'short_name', 'country_code']
@@ -18,7 +18,7 @@ class CountryAPI(MethodView):
             query_countries = Country.query.filter_by(iso_code=iso_code).first()
 
             if query_countries is None:
-                return response(404)
+                return self.response(404)
 
         else:
             page = int(request.args.get('page', '1'))
@@ -27,11 +27,11 @@ class CountryAPI(MethodView):
             name = request.args.get('name')
 
             if sort not in allowed_sort:
-                return response(400, 'Invalid sort field')
+                return self.response(400, 'Invalid sort field')
 
             if name:
                 if len(name) < 2:
-                    return response(400, 'Minimum length allowed for name: 2')
+                    return self.response(400, 'Minimum length allowed for name: 2')
 
                 pagination = Country.query.filter(Country.short_name.like(name + "%"))\
                     .order_by(sort).paginate(page, count, False)
@@ -41,9 +41,9 @@ class CountryAPI(MethodView):
             query_countries = pagination.items
 
             if len(query_countries) == 0:
-                return response(404)
+                return self.response(404)
 
-        return response(200, query_countries, pagination, request.base_url)
+        return self.response(200, query_countries, pagination, request.base_url)
 
     def post(self):
         errors = []
@@ -84,7 +84,7 @@ class CountryAPI(MethodView):
                 errors.append("The continental_code doesn't exists")
 
         if errors:
-            return response(400, errors)
+            return self.response(400, errors)
 
         new_continent = Country(
             iso_code=iso_code,
@@ -113,15 +113,15 @@ class CountryAPI(MethodView):
         )
         new_continent.save()
 
-        return response(201)
+        return self.response(201)
 
     def delete(self, iso_code):
         country = Country.query.filter_by(iso_code=iso_code).first()
         if country is None:
-            return response(404)
+            return self.response(404)
 
         country.delete()
-        return response(200)
+        return self.response(200)
 
     def put(self, iso_code):
         errors = []
@@ -129,7 +129,7 @@ class CountryAPI(MethodView):
         country = Country.query.filter_by(iso_code=iso_code).first()
 
         if country is None:
-            return response(404)
+            return self.response(404)
 
         iso_code_long = request.form.get('iso_code_long')
         short_name = request.form.get('short_name')
@@ -159,7 +159,7 @@ class CountryAPI(MethodView):
             if validate is None:
                 errors.append("The continental_code doesn't exists")
         if errors:
-            return response(400, errors)
+            return self.response(400, errors)
 
         if iso_code_long:
             country.iso_code_long = iso_code_long
@@ -207,7 +207,7 @@ class CountryAPI(MethodView):
             country.currency = currency
 
         country.save()
-        return response(200)
+        return self.response(200)
 
 country_view = CountryAPI.as_view('country_api')
 countries.add_url_rule('/', defaults={'iso_code': None}, view_func=country_view, methods=['GET'])
