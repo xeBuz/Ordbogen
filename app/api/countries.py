@@ -112,80 +112,59 @@ class CountryAPI(MethodView, APIOrdbogen):
         if country is None:
             return self.response(404)
 
-        iso_code_long = request.form.get('iso_code_long')
-        short_name = request.form.get('short_name')
-        formal_name = request.form.get('formal_name')
-        demonym = request.form.get('demonym')
-        country_code = request.form.get('country_code')
-        continental_code = request.form.get('continental_code')
-        coordinates = request.form.get('coordinates')
-        elevation = request.form.get('elevation')
-        elevation_low = request.form.get('elevation_low')
-        area = request.form.get('area')
-        land = request.form.get('land')
-        fertility = request.form.get('fertility')
-        population = request.form.get('population')
-        population_urban = request.form.get('population_urban')
-        itu = request.form.get('itu')
-        web = request.form.get('web')
-        gis = request.form.get('gis')
-        statistics = request.form.get('statistics')
-        flag = request.form.get('flag'),
-        government = request.form.get('government')
-        boundary_box = request.form.get('boundary_box')
-        currency = request.form.get('currency')
+        params = self.get_form_values(Country.get_columns(), request.form)
 
-        if continental_code:
-            validate = Continent.query.filter_by(code=continental_code).first()
+        if params['continental_code']:
+            validate = Continent.query.filter_by(code=params['continental_code']).first()
             if validate is None:
                 errors.append("The continental_code doesn't exists")
         if errors:
             return self.response(400, errors)
 
-        if iso_code_long:
-            country.iso_code_long = iso_code_long
-        if short_name:
-            country.short_name = short_name
-        if formal_name:
-            country.formal_name = formal_name
-        if demonym:
-            country.demonym = demonym
-        if country_code:
-            country.country_code = country_code
-        if continental_code:
-            country.continental_code = continental_code
-        if coordinates:
-            country.coordinates = coordinates
-        if elevation:
-            country.elevation = elevation
-        if elevation_low:
-            country.elevation_low = elevation_low
-        if area:
-            country.area = area
-        if land:
-            country.land = land
-        if fertility:
-            country.fertility = fertility
-        if population:
-            country.population = population
-        if population_urban:
-            country.population_urban = population_urban
-        if itu:
-            country.itu = itu
-        if web:
-            country.web = web
-        if gis:
-            country.gis = gis
-        if statistics:
-            country.statistics = statistics
-        if flag:
-            country.flag = flag
-        if government:
-            country.government = government
-        if boundary_box:
-            country.boundary_box = boundary_box
-        if currency:
-            country.currency = currency
+        if params['iso_code_long']:
+            country.iso_code_long = params['iso_code_long']
+        if params['short_name']:
+            country.short_name = params['short_name']
+        if params['formal_name']:
+            country.formal_name = params['formal_name']
+        if params['demonym']:
+            country.demonym = params['demonym']
+        if params['country_code']:
+            country.country_code = params['country_code']
+        if params['continental_code']:
+            country.continental_code = params['continental_code']
+        if params['coordinates']:
+            country.coordinates = params['coordinates']
+        if params['elevation']:
+            country.elevation = params['elevation']
+        if params['elevation_low']:
+            country.elevation_low = params['elevation_low']
+        if params['area']:
+            country.area = params['area']
+        if params['land']:
+            country.land = params['land']
+        if params['fertility']:
+            country.fertility = params['fertility']
+        if params['population']:
+            country.population = params['population']
+        if params['population_urban']:
+            country.population_urban = params['population_urban']
+        if params['itu']:
+            country.itu = params['itu']
+        if params['web']:
+            country.web = params['web']
+        if params['gis']:
+            country.gis = params['gis']
+        if params['statistics']:
+            country.statistics = params['statistics']
+        if params['flag']:
+            country.flag = params['flag']
+        if params['government']:
+            country.government = params['government']
+        if params['boundary_box']:
+            country.boundary_box = params['boundary_box']
+        if params['currency']:
+            country.currency = params['currency']
 
         country.save()
         return self.response(200)
