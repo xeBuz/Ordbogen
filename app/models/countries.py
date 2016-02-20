@@ -45,7 +45,6 @@ class Country(BaseModel):
             'demonym': self.demonym,
             'country_code': self.country_code,
             'continental_code': self.continental_code,
-            # 'continent': self.continent.serialize,
             'coordinates': self.coordinates,
             'elevation': self.elevation,
             'elevation_low': self.elevation_low,
@@ -64,3 +63,16 @@ class Country(BaseModel):
             'currency': self.currency,
         }
 
+    @staticmethod
+    def required_fields():
+        return ['iso_code', 'iso_code_long', 'short_name', 'continental_code', 'country_code']
+
+    @staticmethod
+    def get_columns():
+        # In first iteration I use
+        # Continent.__table__.columns.keys()
+        # But I don't want all the columns, so I do it manually
+
+        return ['iso_code', 'iso_code_long', 'short_name', 'formal_name', 'demonym', 'country_code', 'continental_code',
+                'coordinates', 'elevation', 'elevation_low', 'area', 'land', 'fertility', 'population',
+                'population_urban', 'itu', 'web', 'gis', 'statistics', 'flag', 'government', 'boundary_box', 'currency']

@@ -48,38 +48,19 @@ class CountryAPI(MethodView, APIOrdbogen):
     def post(self):
         errors = []
 
-        iso_code = request.form.get('iso_code')
-        iso_code_long = request.form.get('iso_code_long')
-        short_name = request.form.get('short_name')
-        formal_name = request.form.get('formal_name')
-        demonym = request.form.get('demonym')
-        country_code = request.form.get('country_code')
-        continental_code = request.form.get('continental_code')
-        coordinates = request.form.get('coordinates')
-        elevation = request.form.get('elevation')
-        elevation_low = request.form.get('elevation_low')
-        area = request.form.get('area')
-        land = request.form.get('land')
-        fertility = request.form.get('fertility')
-        population = request.form.get('population')
-        population_urban = request.form.get('population_urban')
-        itu = request.form.get('itu')
-        web = request.form.get('web')
-        gis = request.form.get('gis')
-        statistics = request.form.get('statistics')
-        flag = request.form.get('flag'),
-        government = request.form.get('government')
-        boundary_box = request.form.get('boundary_box')
-        currency = request.form.get('currency')
+        try:
+            self.validate_fields(Country.required_fields(), request.form.keys())
+        except ValueError:
+            return self.response(400, 'Required fields: ' + ' '.join(Country.required_fields()))
 
-        if iso_code is None:
-            errors.append("Invalid iso_code value")
-        else:
-            validate = Country.query.filter_by(iso_code=iso_code).first()
-            if validate:
-                errors.append("The iso_code already exists")
-        if continental_code:
-            validate = Continent.query.filter_by(code=continental_code).first()
+        params = self.get_form_values(Country.get_columns(), request.form)
+
+        validate = Country.query.filter_by(iso_code=params['iso_code']).first()
+        if validate:
+            errors.append("The iso_code already exists")
+
+        if params['continental_code']:
+            validate = Continent.query.filter_by(code=params['continental_code']).first()
             if validate is None:
                 errors.append("The continental_code doesn't exists")
 
@@ -87,29 +68,29 @@ class CountryAPI(MethodView, APIOrdbogen):
             return self.response(400, errors)
 
         new_continent = Country(
-            iso_code=iso_code,
-            iso_code_long=iso_code_long,
-            short_name=short_name,
-            formal_name=formal_name,
-            demonym=demonym,
-            country_code=country_code,
-            continental_code=continental_code,
-            coordinates=coordinates,
-            elevation=elevation,
-            elevation_low=elevation_low,
-            area=area,
-            land=land,
-            fertility=fertility,
-            population=population,
-            population_urban=population_urban,
-            itu=itu,
-            web=web,
-            gis=gis,
-            statistics=statistics,
-            flag=flag,
-            government=government,
-            boundary_box=boundary_box,
-            currency=currency,
+            iso_code=params['iso_codeparams['],
+            iso_code_long=params['iso_code_long'],
+            short_name=params['short_name'],
+            formal_name=params['formal_name'],
+            demonym=params['demonym'],
+            country_code=params['country_code'],
+            continental_code=params['continental_code'],
+            coordinates=params['coordinates'],
+            elevation=params['elevation'],
+            elevation_low=params['elevation_low'],
+            area=params['area'],
+            land=params['land'],
+            fertility=params['fertility'],
+            population=params['population'],
+            population_urban=params['population_urban'],
+            itu=params['itu'],
+            web=params['web'],
+            gis=params['gis'],
+            statistics=params['statistics'],
+            flag=params['flag'],
+            government=params['government'],
+            boundary_box=params['boundary_box'],
+            currency=params['currency'],
         )
         new_continent.save()
 

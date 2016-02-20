@@ -18,3 +18,14 @@ class Continent(BaseModel):
             'code': self.code,
             'name': self.name
         }
+
+    @staticmethod
+    def required_fields():
+        return ['code', 'name']
+
+    @staticmethod
+    def get_columns():
+        # In first iteration I use
+        # Continent.__table__.columns.keys()
+        # But I don't want all the columns, so I do it manually
+        return ['code', 'name']

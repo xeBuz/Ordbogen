@@ -15,8 +15,13 @@ class BaseModel(db.Model):
     def __repr__(self):
         return
 
-    def get_columns(self):
-        return self.__table__.columns.keys()
+    @staticmethod
+    def required_fields():
+        return None
+
+    @staticmethod
+    def model_fields():
+        return None
 
     def save(self):
         db.session.add(self)

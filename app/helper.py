@@ -4,13 +4,13 @@ from httplib import responses as http_code
 
 class APIOrdbogen(object):
 
-    json = {}
+    def __init__(self):
+        self.json = {}
+        self.success = False
 
-    def _is_success(self, code):
-        return True if code < 400 else False
-
-    def _set_success(self, sucess=False):
-        self.json['success'] = sucess
+    def _set_success(self, code):
+        self.success = True if code < 400 else False
+        self.json['success'] = self.success
 
     def _set_status(self, code):
         self.json['status'] = {
@@ -18,10 +18,10 @@ class APIOrdbogen(object):
             'message': http_code.get(code, None)
         }
 
-    def _set_data(self, data, success):
+    def _set_data(self, data):
 
         if data:
-            if success:
+            if self.success:
                 if isinstance(data, list):
                     data = [i.serialize for i in data]
                 else:
@@ -51,11 +51,24 @@ class APIOrdbogen(object):
             self.json['links'] = pagination_links
 
     def response(self, code=200, data=None, pagination=None):
-        success =  self._is_success(code)
 
-        self._set_success(success)
+        self._set_success(code)
         self._set_status(code)
-        self._set_data(data, success)
+        self._set_data(data)
         self._set_pagination(pagination)
 
         return jsonify(self.json), code
+
+    @staticmethod
+    def validate_fields(required_fields, provided_fields):
+        if not all(x in provided_fields for x in required_fields):
+            raise ValueError
+
+    @staticmethod
+    def get_form_values(fields, form_request):
+        params = {}
+
+        for field in fields:
+            params[field] = form_request.get(field)
+
+        return params
