@@ -67,7 +67,7 @@ class CountryAPI(MethodView, APIOrdbogen):
         if errors:
             return self.response(400, errors)
 
-        new_continent = Country(
+        new_country = Country(
             iso_code=params['iso_codeparams['],
             iso_code_long=params['iso_code_long'],
             short_name=params['short_name'],
@@ -92,7 +92,7 @@ class CountryAPI(MethodView, APIOrdbogen):
             boundary_box=params['boundary_box'],
             currency=params['currency'],
         )
-        new_continent.save()
+        new_country.save()
 
         return self.response(201)
 
