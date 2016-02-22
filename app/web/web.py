@@ -11,3 +11,10 @@ def index():
     countries = Country.query.all()
 
     return render_template('index.html', countries=countries)
+
+
+@web_index.route('/list', methods=['GET'])
+def list_countries():
+    countries = Country.query.all()
+
+    return render_template('list.html', countries=countries)

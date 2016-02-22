@@ -9,29 +9,6 @@
 
         <main class="ui page grid">
             <div class="row">
-                <h1></h1>
-                <h2>Country list</h2>
-
-                <table class="ui celled striped table">
-                    <thead>
-                        <tr><th colspan="3">
-                        Country list
-                        </th>
-                    </tr></thead>
-
-                    <tbody>
-                    {% for country in countries %}
-                        <tr>
-                            <td><i class="{{ country.iso_code}} flag"></i> {{ country.iso_code }}</td>
-                            <td>{{ country.short_name }}</td>
-                            <td class="center aligned"><a href="/web/country/{{ country.iso_code }}"><i class="world link icon"></i></a></td>
-                        </tr>
-                    {% endfor %}
-
-                    </tbody>
-                </table>
-
-
 
                 <div class="ui fluid search">
                   <div class="ui icon input">
