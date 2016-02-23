@@ -4,6 +4,10 @@ body {
     font-family: "Open Sans", serif;
 }
 
+.ui.page.grid {
+    padding-top: 100px !important;
+}
+
 .ui.menu .item {
     font-weight: 300;
     font-size: 0.9rem;
@@ -12,3 +16,8 @@ body {
 .column.starter {
     padding: 40px 15px;
 }
+
+.centered {
+    text-align: center;
+}
+
