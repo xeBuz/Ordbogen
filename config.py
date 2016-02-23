@@ -21,5 +21,8 @@ class Production(Config):
 
 class Testing(Config):
     TESTING = True
+    SQLALCHEMY_DATABASE_URI = 'sqlite://'
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(database_path, 'testing.db')
+
 
 
