@@ -9,11 +9,123 @@
 
         <main class="ui page grid">
             <div class="row">
-                <div class="center aligned starter column">
-                    <h1 class="ui header">Semantic UI starter template</h1>
-                    <p>Use this document as a way to quickly start any new project.</p>
-                    <p>All you get is this text and a mostly barebones HTML document.</p>
-                </div>
+                <h1></h1>
+
+                  <div class="ui text container">
+                      <h1 class="ui dividing header">{{country.short_name}}</h1>
+
+                    <div class="ui vertically divided grid">
+
+                        <div class="ten wide column">
+                            <div class="ui small statistic">
+                              <div class="label">
+                                Formal name
+                              </div>
+                              <div class="value">
+                                {{country.formal_name}}
+                              </div>
+                            </div>
+                        </div>
+
+                        <div class="six wide column">
+                            <img class="ui middle aligned image medium" src="{{country.flag}}" alt="">
+                        </div>
+
+                        <div class="three column row">
+                            <div class="column centered">
+                              <div class="ui small statistic">
+                                <div class="value">
+                                  {{country.area}}
+                                </div>
+                                <div class="label">
+                                  Area
+                                </div>
+                              </div>
+                            </div>
+
+                            <div class="column centered">
+                              <div class="ui small statistic">
+                                <div class="value">
+                                  {{country.land}}
+                                </div>
+                                <div class="label">
+                                  Land
+                                </div>
+                              </div>
+                            </div>
+
+                           <div class="column centered">
+                              <div class="ui small {{extras.fertility_color}} statistic">
+                                <div class="value">
+                                  {{country.fertility}} %
+                                </div>
+                                <div class="label">
+                                  Fertility
+                                </div>
+                              </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="eight wide column centered">
+                              <div class="ui small statistic">
+                                <div class="value">
+                                  {{country.population}}
+                                </div>
+                                <div class="label">
+                                  Population
+                                </div>
+                              </div>
+                            </div>
+
+                            <div class="eight wide column centered">
+                              <div class="ui small statistic">
+                                <div class="value">
+                                  {{country.population_urban}}
+                                </div>
+                                <div class="label">
+                                  Urban Population
+                                </div>
+                              </div>
+                            </div>
+
+                            <div class="sixteen wide column centered">
+                                <div class="ui {{extras.urban_population_color}} tiny progress" data-percent="{{extras.urban_population_percentage}}" id="progress-pupulation">
+                                    <div class="bar"></div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="two column row">
+                            <div class="column centered">
+                              <div class="ui small statistic">
+                                <div class="value">
+                                  {{country.birth}} %
+                                </div>
+                                <div class="label">
+                                  Births
+                                </div>
+                              </div>
+                            </div>
+
+                            <div class="column centered">
+                              <div class="ui small statistic">
+                                <div class="value">
+                                  {{country.death}} %
+                                </div>
+                                <div class="label">
+                                  Deaths
+                                </div>
+                              </div>
+                            </div>
+
+                        </div>
+
+
+                    </div>
+
+
             </div>
 
 
