@@ -3,6 +3,7 @@ from flask import Blueprint, request
 from flask.views import MethodView
 from app.models.countries import Country
 from app.models.continents import Continent
+from app.controllers.login import login_required
 
 countries = Blueprint('countries', __name__, url_prefix='/api/countries')
 
@@ -44,6 +45,7 @@ class CountryAPI(MethodView, BaseController):
 
         return self.response(200, query_countries, pagination)
 
+    @login_required()
     def post(self):
         errors = []
         try:
@@ -96,6 +98,7 @@ class CountryAPI(MethodView, BaseController):
 
         return self.response(201)
 
+    @login_required()
     def delete(self, iso_code):
         country = Country.query.filter_by(iso_code=iso_code).first()
         if country is None:
@@ -104,6 +107,7 @@ class CountryAPI(MethodView, BaseController):
         country.delete()
         return self.response(200)
 
+    @login_required()
     def put(self, iso_code):
         errors = []
         iso_code = str(iso_code).upper()

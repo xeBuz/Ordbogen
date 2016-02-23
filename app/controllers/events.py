@@ -1,6 +1,7 @@
 from .base import BaseController
 from app.models.events import Event, EventCategory
 from app.models.countries import Country
+from app.controllers.login import login_required
 from flask import Blueprint, request
 from flask.views import MethodView
 
@@ -9,6 +10,7 @@ events = Blueprint('events', __name__, url_prefix='/api/events')
 
 class EventAPI(MethodView, BaseController):
 
+    @login_required()
     def get(self, event_id):
         if event_id:
             pagination = None
@@ -43,6 +45,7 @@ class EventAPI(MethodView, BaseController):
 
         return self.response(200, query_events, pagination)
 
+    @login_required()
     def post(self):
         try:
             self.validate_fields(Event.required_fields(), request.form)
@@ -70,6 +73,7 @@ class EventAPI(MethodView, BaseController):
 
         return self.response(201)
 
+    @login_required()
     def delete(self, event_id):
         event = Event.query.filter_by(id=event_id).first()
         if event is None:
@@ -78,6 +82,7 @@ class EventAPI(MethodView, BaseController):
         event.delete()
         return self.response(200)
 
+    @login_required()
     def put(self, event_id):
         event = Event.query.filter_by(id=event_id).first()
         if event is None:

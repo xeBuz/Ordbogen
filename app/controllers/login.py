@@ -67,6 +67,13 @@ def login_required():
         def validate_token(*args, **kwargs):
             token = Tokens.query.filter_by(key=request.headers['Authorization']).first()
             error = None
+            response = {
+                'status': {
+                    'code': 401,
+                    'message': None
+                },
+                'success': False
+            }
 
             if token is None:
                 error = 'Unauthorized Access'
@@ -76,10 +83,8 @@ def login_required():
                     error = 'Login Expired'
 
             if error:
-                return jsonify({'metadata': {
-                    'code': 401,
-                    'message': error
-                }}, 401)
+                response['status']['message'] = error
+                return jsonify(response)
 
             return f(*args, **kwargs)
         return validate_token

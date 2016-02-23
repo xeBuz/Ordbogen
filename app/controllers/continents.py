@@ -1,5 +1,6 @@
 from .base import BaseController
 from app.models.continents import Continent
+from app.controllers.login import login_required
 from flask import Blueprint, request
 from flask.views import MethodView
 
@@ -23,6 +24,7 @@ class ContinentAPI(MethodView, BaseController):
 
         return self.response(200, query_continents)
 
+    @login_required()
     def post(self):
         try:
             self.validate_fields(Continent.required_fields(), request.form)
@@ -43,6 +45,7 @@ class ContinentAPI(MethodView, BaseController):
 
         return self.response(201)
 
+    @login_required()
     def delete(self, code):
         continent = Continent.query.filter_by(code=code).first()
         if continent is None:
@@ -51,6 +54,7 @@ class ContinentAPI(MethodView, BaseController):
         continent.delete()
         return self.response(200)
 
+    @login_required()
     def put(self, code):
         continent = Continent.query.filter_by(code=code).first()
         if continent is None:
