@@ -23,6 +23,8 @@ class Country(BaseModel):
     fertility = db.Column(db.Float)
     population = db.Column(db.Integer)
     population_urban = db.Column(db.Integer)
+    birth = db.Column(db.Float)
+    death = db.Column(db.Float)
     itu = db.Column(db.String(256))
     web = db.Column(db.String(256))
     gis = db.Column(db.String(256))
@@ -53,6 +55,8 @@ class Country(BaseModel):
             'fertility': self.fertility,
             'population': self.population,
             'population_urban': self.population_urban,
+            'birth': self.birth,
+            'death': self.death,
             'ITU': self.itu,
             'web': self.web,
             'GIS': self.gis,
@@ -75,4 +79,5 @@ class Country(BaseModel):
 
         return ['iso_code', 'iso_code_long', 'short_name', 'formal_name', 'demonym', 'country_code', 'continental_code',
                 'coordinates', 'elevation', 'elevation_low', 'area', 'land', 'fertility', 'population',
-                'population_urban', 'itu', 'web', 'gis', 'statistics', 'flag', 'government', 'boundary_box', 'currency']
+                'population_urban', 'birth', 'death', 'itu', 'web', 'gis', 'statistics', 'flag', 'government',
+                'boundary_box', 'currency']
