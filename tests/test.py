@@ -4,6 +4,7 @@ from app import app
 from app.models.continents import Continent
 from app.models.countries import Country
 from app.models.events import Event
+from app.models.users import Users
 from flask import json
 
 
@@ -58,6 +59,12 @@ class OrdbogenTestCase(unittest.TestCase):
             'description': 'Minas Tirith is under attack',
             'category_id': 1,
             'country_id': 'GO',
+        }
+
+        self.user = {
+            'name': 'Isildur',
+            'email': 'isildur@ring.com',
+            'password': 'Valandil123'
         }
 
         self.event_id = None
@@ -274,6 +281,17 @@ class OrdbogenTestCase(unittest.TestCase):
         data = json.loads(response.data)
         self.assertEqual(data['status']['code'], 200)
         self.assertEqual(data['status']['message'], 'OK')
+
+    def test_18_user_add(self):
+        response = self.app.post('/api/users/', data=self.user)
+        data = json.loads(response.data)
+        self.assertEqual(data['status']['code'], 201)
+
+    def test_96_user_delete(self):
+        user = Users.query.filter_by(name=self.user['name']).first()
+        response = self.app.delete('/api/users/' + str(user.id))
+        data = json.loads(response.data)
+        self.assertEqual(data['status']['code'], 200)
 
     def test_97_event_delete(self):
         event = Event.query.filter_by(title=self.event['title']).first()
