@@ -29,7 +29,7 @@ class UsersAPI(MethodView, BaseController):
 
     def post(self):
         try:
-            self.validate_fields(Users.required_fields(), request.form.keys())
+            self.validate_fields(Users.required_fields(), request.form)
         except ValueError:
             return self.response(400, 'Required fields: ' + ' '.join(Users.required_fields()))
 
@@ -44,8 +44,16 @@ class UsersAPI(MethodView, BaseController):
 
         return self.response(201)
 
+    def delete(self, user_id):
+        user = Users.query.filter_by(id=user_id).first()
+        if user is None:
+            return self.response(404)
+
+        user.delete()
+        return self.response(200)
+
 
 user_view = UsersAPI.as_view('user_api')
-users.add_url_rule('/', defaults={'event_id': None}, view_func=user_view, methods=['GET'])
+users.add_url_rule('/', defaults={'user_id': None}, view_func=user_view, methods=['GET'])
 users.add_url_rule('/', view_func=user_view, methods=['POST'])
-users.add_url_rule('/<int:event_id>', view_func=user_view, methods=['GET'])
+users.add_url_rule('/<int:user_id>', view_func=user_view, methods=['GET', 'DELETE'])

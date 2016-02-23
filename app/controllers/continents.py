@@ -25,7 +25,7 @@ class ContinentAPI(MethodView, BaseController):
 
     def post(self):
         try:
-            self.validate_fields(Continent.required_fields(), request.form.keys())
+            self.validate_fields(Continent.required_fields(), request.form)
         except ValueError:
             return self.response(400, 'Required fields: ' + ' '.join(Continent.required_fields()))
 
