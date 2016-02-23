@@ -46,9 +46,8 @@ class CountryAPI(MethodView, APIOrdbogen):
 
     def post(self):
         errors = []
-
         try:
-            self.validate_fields(Country.required_fields(), request.form.keys())
+            self.validate_fields(Country.required_fields(), request.form)
         except ValueError:
             return self.response(400, 'Required fields: ' + ' '.join(Country.required_fields()))
 
@@ -67,7 +66,7 @@ class CountryAPI(MethodView, APIOrdbogen):
             return self.response(400, errors)
 
         new_country = Country(
-            iso_code=params['iso_codeparams['],
+            iso_code=params['iso_code'],
             iso_code_long=params['iso_code_long'],
             short_name=params['short_name'],
             formal_name=params['formal_name'],
@@ -80,6 +79,8 @@ class CountryAPI(MethodView, APIOrdbogen):
             area=params['area'],
             land=params['land'],
             fertility=params['fertility'],
+            death=params['death'],
+            birth=params['birth'],
             population=params['population'],
             population_urban=params['population_urban'],
             itu=params['itu'],

@@ -181,22 +181,82 @@ class OrdbogenTestCase(unittest.TestCase):
         self.assertEqual(country.currency, self.country['currency'])
 
     def test_11_country_delete(self):
-        pass
+        country = Country.query.filter_by(iso_code=self.country['iso_code']).first()
+        country.delete()
+        country = Country.query.filter_by(iso_code=self.country['iso_code']).first()
+        self.assertIsNone(country)
 
     def test_12_country_post(self):
-        pass
+        response = self.app.post('/api/countries/', data=self.country)
+        data = json.loads(response.data)
+        self.assertEqual(data['status']['code'], 201)
 
     def test_13_country_get_all(self):
-        pass
+        response = self.app.get('/api/countries/')
+        data = json.loads(response.data)
+
+        self.assertEqual(data['status']['code'], 200)
+        self.assertEqual(data['status']['message'], 'OK')
 
     def test_14_country_get_one(self):
-        pass
+        response = self.app.get('/api/countries/' + str(self.country['iso_code']))
+        data = json.loads(response.data)
+
+        self.assertEqual(data['status']['code'], 200)
+        self.assertEqual(data['status']['message'], 'OK')
+
+        self.assertEqual(data['data']['iso_code_long'], self.country['iso_code_long'])
+        self.assertEqual(data['data']['short_name'], self.country['short_name'])
+        self.assertEqual(data['data']['formal_name'], self.country['formal_name'])
+        self.assertEqual(data['data']['demonym'], self.country['demonym'])
+        self.assertEqual(data['data']['country_code'], self.country['country_code'])
+        self.assertEqual(data['data']['continental_code'], self.country['continental_code'])
+        self.assertEqual(data['data']['coordinates'], self.country['coordinates'])
+        self.assertEqual(data['data']['elevation'], self.country['elevation'])
+        self.assertEqual(data['data']['elevation_low'], self.country['elevation_low'])
+        self.assertEqual(data['data']['area'], self.country['area'])
+        self.assertEqual(data['data']['land'], self.country['land'])
+        self.assertEqual(data['data']['fertility'], self.country['fertility'])
+        self.assertEqual(data['data']['population'], self.country['population'])
+        self.assertEqual(data['data']['population_urban'], self.country['population_urban'])
+        self.assertEqual(data['data']['birth'], self.country['birth'])
+        self.assertEqual(data['data']['death'], self.country['death'])
+        self.assertEqual(data['data']['ITU'], self.country['itu'])
+        self.assertEqual(data['data']['web'], self.country['web'])
+        self.assertEqual(data['data']['GIS'], self.country['gis'])
+        self.assertEqual(data['data']['statistics'], self.country['statistics'])
+        self.assertEqual(data['data']['flag'], self.country['flag'])
+        self.assertEqual(data['data']['government'], self.country['government'])
+        self.assertEqual(data['data']['boundary_box'], self.country['boundary_box'])
+        self.assertEqual(data['data']['currency'], self.country['currency'])
 
     def test_15_country_put(self):
-        pass
+        fake = {
+            'formal_name': 'Hyaralondie',
+            'area': 10000000
+        }
+        original = {
+            'formal_name': self.country['formal_name'],
+            'area': self.country['area']
+        }
+
+        response = self.app.put('/api/countries/' + str(self.country['iso_code']), data=fake)
+        data = json.loads(response.data)
+        self.assertEqual(data['status']['code'], 200)
+
+        response = self.app.get('/api/countries/' + str(self.country['iso_code']))
+        data = json.loads(response.data)
+        self.assertEqual(data['data']['formal_name'], fake['formal_name'])
+        self.assertEqual(data['data']['area'], fake['area'])
+
+        response = self.app.put('/api/countries/' + str(self.country['iso_code']), data=original)
+        data = json.loads(response.data)
+        self.assertEqual(data['status']['code'], 200)
 
     def test_98_country_delete(self):
-        pass
+        response = self.app.delete('/api/countries/' + str(self.country['iso_code']))
+        data = json.loads(response.data)
+        self.assertEqual(data['status']['code'], 200)
 
     def test_99_continent_api_delete(self):
         response = self.app.delete('/api/continents/' + str(self.continent['code']))
