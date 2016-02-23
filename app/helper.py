@@ -72,3 +72,18 @@ class APIOrdbogen(object):
             params[field] = form_request.get(field)
 
         return params
+
+
+def get_color_stadistics(item):
+    if item > 90:
+        color = 'green'
+    elif item > 70:
+        color = 'teal'
+    elif item > 50:
+        color = 'orange'
+    elif item > 30:
+        color = 'yellow'
+    else:
+        color = 'red'
+
+    return color
