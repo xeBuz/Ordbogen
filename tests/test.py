@@ -104,8 +104,21 @@ class OrdbogenTestCase(unittest.TestCase):
         data = json.loads(response.data)
         self.assertEqual(data['status']['code'], 404)
 
-    def test_09_continent_put(self):
-        pass
+    def test_08s_continent_put(self):
+        fake = {'name': 'Mordor'}
+        original = {'name': self.continent['name']}
+
+        response = self.app.put('/api/continents/' + str(self.continent['code']), data=fake)
+        data = json.loads(response.data)
+        self.assertEqual(data['status']['code'], 200)
+
+        response = self.app.get('/api/continents/' + str(self.continent['code']))
+        data = json.loads(response.data)
+        self.assertEqual(data['data']['name'], fake['name'])
+
+        response = self.app.put('/api/continents/' + str(self.continent['code']), data=original)
+        data = json.loads(response.data)
+        self.assertEqual(data['status']['code'], 200)
 
     def test_09_country_new(self):
         new_country = Country(
@@ -169,7 +182,7 @@ class OrdbogenTestCase(unittest.TestCase):
 
     def test_11_country_delete(self):
         pass
-    
+
     def test_12_country_post(self):
         pass
 

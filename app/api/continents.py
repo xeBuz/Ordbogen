@@ -60,6 +60,7 @@ class ContinentAPI(MethodView, APIOrdbogen):
         if name:
             continent.name = name
 
+        continent.save()
         return self.response(200)
 
 continent_view = ContinentAPI.as_view('continent_api')
