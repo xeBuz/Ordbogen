@@ -267,15 +267,19 @@ class OrdbogenTestCase(unittest.TestCase):
     def test_16_event_post(self):
         response = self.app.post('/api/events/', data=self.event)
         data = json.loads(response.data)
-        print data
         self.assertEqual(data['status']['code'], 201)
 
-    def test_16_event_get_all(self):
+    def test_17_event_get_all(self):
         response = self.app.get('/api/countries/')
         data = json.loads(response.data)
-
         self.assertEqual(data['status']['code'], 200)
         self.assertEqual(data['status']['message'], 'OK')
+
+    def test_97_event_delete(self):
+        event = Event.query.filter_by(title=self.event['title']).first()
+        response = self.app.delete('/api/events/' + str(event.id))
+        data = json.loads(response.data)
+        self.assertEqual(data['status']['code'], 200)
 
     def test_98_country_delete(self):
         response = self.app.delete('/api/countries/' + str(self.country['iso_code']))
