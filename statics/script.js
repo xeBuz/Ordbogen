@@ -18,33 +18,35 @@ $.fn.api.settings.api = {
 $(document)
 .ready(function () {
 
-$('.ui.search')
-  .search({
-    apiSettings: {
-      action: 'get countries',
-      onResponse: function(Country) {
-        var response = [];
+    $('#progress-pupulation').progress();
 
-        console.log(Country.data);
-        $.each(Country.data, function(index, item){
-          console.log(item.short_name)
-            response.push({
-            name  : item.short_name
-          });
+    $('.ui.search')
+      .search({
+        apiSettings: {
+          action: 'get countries',
+          onResponse: function(Country) {
+            var response = [];
 
-        });
-        console.log(response);
-        return response;
-      }
-    },
-    fields: {
-      results : 'data',
-      name    : 'short_name'
-    },
-    minCharacters : 2,
-    //debug: true,
-    //verbose: true
-  })
+            console.log(Country.data);
+            $.each(Country.data, function(index, item){
+              console.log(item.short_name)
+                response.push({
+                name  : item.short_name
+              });
+
+            });
+            console.log(response);
+            return response;
+          }
+        },
+        fields: {
+          results : 'data',
+          name    : 'short_name'
+        },
+        minCharacters : 2,
+        //debug: true,
+        //verbose: true
+      })
 ;
 
 });
