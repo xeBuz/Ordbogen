@@ -11,7 +11,6 @@ class CountryAPI(MethodView, APIOrdbogen):
 
     def get(self, iso_code):
         allowed_sort = ['iso_code', 'short_name', 'country_code']
-        print iso_code
         if iso_code:
             pagination = None
             iso_code = str(iso_code).upper()

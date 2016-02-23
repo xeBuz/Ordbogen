@@ -1,6 +1,6 @@
 from app import db
-from base import BaseModel
 from app.models.continents import Continent
+from .base import BaseModel
 
 
 class Country(BaseModel):

@@ -1,5 +1,5 @@
 from app import db
-from base import BaseModel
+from .base import BaseModel
 
 
 class Continent(BaseModel):

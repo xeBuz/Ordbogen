@@ -1,6 +1,6 @@
 from app import db
-from base import BaseModel
 from app.models.countries import Country
+from .base import BaseModel
 
 
 class EventCategory(db.Model):

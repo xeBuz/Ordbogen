@@ -1,5 +1,10 @@
+import sys
 from flask import jsonify, request
-from httplib import responses as http_code
+
+if sys.version_info >= (3, 0):
+    from http.client import responses as http_code
+else:
+    from httplib import responses as http_code
 
 
 class APIOrdbogen(object):
@@ -73,17 +78,3 @@ class APIOrdbogen(object):
 
         return params
 
-
-def get_color_stadistics(item):
-    if item > 90:
-        color = 'green'
-    elif item > 70:
-        color = 'teal'
-    elif item > 50:
-        color = 'orange'
-    elif item > 30:
-        color = 'yellow'
-    else:
-        color = 'red'
-
-    return color

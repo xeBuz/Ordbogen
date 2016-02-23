@@ -1,7 +1,5 @@
-from app.helper import get_color_stadistics
-from app.models.continents import Continent
 from app.models.countries import Country
-from flask import Blueprint, request, render_template
+from flask import Blueprint, render_template
 
 website = Blueprint('/', __name__, url_prefix='/')
 
@@ -38,3 +36,18 @@ def get_country(iso_code):
             extras['fertility_color'] = get_color_stadistics(country.fertility)
 
         return render_template('country.html', country=country, extras=extras)
+
+
+def get_color_stadistics(item):
+    if item > 90:
+        color = 'green'
+    elif item > 70:
+        color = 'teal'
+    elif item > 50:
+        color = 'orange'
+    elif item > 30:
+        color = 'yellow'
+    else:
+        color = 'red'
+
+    return color
