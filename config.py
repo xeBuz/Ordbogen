@@ -5,6 +5,7 @@ database_path = basedir + "/database/"
 
 class Config(object):
     SQLALCHEMY_TRACK_MODIFICATIONS = True
+    TOKEN_TTL_HOURS = 24
 
 
 class Development(Config):
@@ -22,7 +23,6 @@ class Production(Config):
 class Testing(Config):
     TESTING = True
     SQLALCHEMY_DATABASE_URI = 'sqlite://'
-    SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(database_path, 'testing.db')
 
 
 
