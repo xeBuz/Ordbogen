@@ -12,9 +12,9 @@ app.config.from_object('config.Development')
 db = SQLAlchemy(app)
 db.init_app(app)
 
-from app.api.continents import continents
-from app.api.countries import countries
-from app.api.events import events
+from app.controllers.continents import continents
+from app.controllers.countries import countries
+from app.controllers.events import events
 
 app.register_blueprint(continents)
 app.register_blueprint(countries)
