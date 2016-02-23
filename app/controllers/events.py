@@ -1,4 +1,4 @@
-from app.helper import APIOrdbogen
+from .base import BaseController
 from app.models.events import Event, EventCategory
 from app.models.countries import Country
 from flask import Blueprint, request
@@ -7,11 +7,11 @@ from flask.views import MethodView
 events = Blueprint('events', __name__, url_prefix='/api/events')
 
 
-class EventAPI(MethodView, APIOrdbogen):
+class EventAPI(MethodView, BaseController):
 
-    def get(self, id):
-        if id:
-            query_events = Event.query.filter_by(id=id).first()
+    def get(self, event_id):
+        if event_id:
+            query_events = Event.query.filter_by(id=event_id).first()
             if query_events is None:
                 return self.response(404)
 
@@ -51,16 +51,16 @@ class EventAPI(MethodView, APIOrdbogen):
 
         return self.response(201)
 
-    def delete(self, id):
-        event = Event.query.filter_by(id=id).first()
+    def delete(self, event_id):
+        event = Event.query.filter_by(id=event_id).first()
         if event is None:
             return self.response(404)
 
         event.delete()
         return self.response(200)
 
-    def put(self, id):
-        event = Event.query.filter_by(id=id).first()
+    def put(self, event_id):
+        event = Event.query.filter_by(id=event_id).first()
         if event is None:
             return self.response(404)
 
@@ -82,6 +82,6 @@ class EventAPI(MethodView, APIOrdbogen):
         return self.response(200)
 
 event_view = EventAPI.as_view('event_api')
-events.add_url_rule('/', defaults={'id': None}, view_func=event_view, methods=['GET'])
+events.add_url_rule('/', defaults={'event_id': None}, view_func=event_view, methods=['GET'])
 events.add_url_rule('/', view_func=event_view, methods=['POST'])
-events.add_url_rule('/<int:id>', view_func=event_view, methods=['GET', 'PUT', 'DELETE'])
+events.add_url_rule('/<int:event_id>', view_func=event_view, methods=['GET', 'PUT', 'DELETE'])

@@ -7,7 +7,7 @@ else:
     from httplib import responses as http_code
 
 
-class APIOrdbogen(object):
+class BaseController(object):
 
     def __init__(self):
         self.json = {}
@@ -77,4 +77,3 @@ class APIOrdbogen(object):
             params[field] = form_request.get(field)
 
         return params
-

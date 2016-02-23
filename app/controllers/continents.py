@@ -1,4 +1,4 @@
-from app.helper import APIOrdbogen
+from .base import BaseController
 from app.models.continents import Continent
 from flask import Blueprint, request
 from flask.views import MethodView
@@ -6,7 +6,7 @@ from flask.views import MethodView
 continents = Blueprint('continents', __name__, url_prefix='/api/continents')
 
 
-class ContinentAPI(MethodView, APIOrdbogen):
+class ContinentAPI(MethodView, BaseController):
 
     def get(self, code):
         if code:

@@ -1,4 +1,4 @@
-from app.helper import APIOrdbogen
+from .base import BaseController
 from flask import Blueprint, request
 from flask.views import MethodView
 from app.models.countries import Country
@@ -7,7 +7,7 @@ from app.models.continents import Continent
 countries = Blueprint('countries', __name__, url_prefix='/api/countries')
 
 
-class CountryAPI(MethodView, APIOrdbogen):
+class CountryAPI(MethodView, BaseController):
 
     def get(self, iso_code):
         allowed_sort = ['iso_code', 'short_name', 'country_code']
