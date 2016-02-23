@@ -3,6 +3,7 @@ import unittest
 from app import app
 from app.models.continents import Continent
 from app.models.countries import Country
+from app.models.events import Event
 from flask import json
 
 
@@ -51,6 +52,16 @@ class OrdbogenTestCase(unittest.TestCase):
             'boundary_box': None,
             'currency': 'gold'
         }
+
+        self.event = {
+            'title': 'Attack',
+            'description': 'Minas Tirith is under attack',
+            'category_id': 1,
+            'country_id': 'GO',
+        }
+
+        self.event_id = None
+        self.country_id = None
 
     def tearDown(self):
         pass
@@ -252,6 +263,19 @@ class OrdbogenTestCase(unittest.TestCase):
         response = self.app.put('/api/countries/' + str(self.country['iso_code']), data=original)
         data = json.loads(response.data)
         self.assertEqual(data['status']['code'], 200)
+
+    def test_16_event_post(self):
+        response = self.app.post('/api/events/', data=self.event)
+        data = json.loads(response.data)
+        print data
+        self.assertEqual(data['status']['code'], 201)
+
+    def test_16_event_get_all(self):
+        response = self.app.get('/api/countries/')
+        data = json.loads(response.data)
+
+        self.assertEqual(data['status']['code'], 200)
+        self.assertEqual(data['status']['message'], 'OK')
 
     def test_98_country_delete(self):
         response = self.app.delete('/api/countries/' + str(self.country['iso_code']))

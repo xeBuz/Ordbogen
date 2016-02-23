@@ -11,17 +11,37 @@ class EventAPI(MethodView, BaseController):
 
     def get(self, event_id):
         if event_id:
+            pagination = None
             query_events = Event.query.filter_by(id=event_id).first()
             if query_events is None:
                 return self.response(404)
 
         else:
-            query_events = Event.query.all()
+            allowed_sort = ['title', 'datetime', 'id']
+
+            page = int(request.args.get('page', '1'))
+            count = int(request.args.get('count', '5'))
+            sort = request.args.get('sort', 'id')
+            country_code = request.args.get('country_id')
+
+            if sort not in allowed_sort:
+                return self.response(400, 'Invalid sort field')
+
+            if country_code:
+                country = Country.query.filter_by(iso_code=country_code).first()
+                if country is None:
+                    return self.response(404)
+
+                pagination = Event.query.filter_by(country_id=country.id).order_by(sort).paginate(page, count, False)
+            else:
+                pagination = Event.query.order_by(sort).paginate(page, count, False)
+
+            query_events = pagination.items
 
             if len(query_events) == 0:
                 return self.response(404)
 
-        return self.response(200, query_events)
+        return self.response(200, query_events, pagination)
 
     def post(self):
         try:
@@ -31,21 +51,20 @@ class EventAPI(MethodView, BaseController):
 
         params = self.get_form_values(Event.get_columns(), request.form)
 
-        country = Country.query.filter_by(id=params['country_id']).first()
-        if country:
-            self.response(400, "The country_id doesn't exists")
+        country = Country.query.filter_by(iso_code=str(params['country_id'].upper())).first()
+        if country is None:
+            return self.response(400, "The country_id doesn't exists")
 
         if params['category_id']:
             category = EventCategory.query.filter_by(id=params['category_id']).first()
-            if category:
-                self.response(400, "The category_id doesn't exists")
+            if category is None:
+                return self.response(400, "The category_id doesn't exists")
 
         new_event = Event(
             title=params['title'],
             description=params['description'],
-            datetime=params['datetime'],
             category_id=params['category_id'],
-            country_id=params['country_id'],
+            country_id=country.id,
         )
         new_event.save()
 
@@ -64,18 +83,20 @@ class EventAPI(MethodView, BaseController):
         if event is None:
             return self.response(404)
 
-        params = self.get_form_values(Country.get_columns(), request.form)
+        params = self.get_form_values(Event.get_columns(), request.form)
+
+        country = Country.query.filter_by(iso_code=str(params['country_id'].upper())).first()
+        if country is None:
+            return self.response(400, "The country_id doesn't exists")
 
         if params['title']:
             event.title = params['title']
         if params['description']:
             event.description = params['description']
-        if params['datetime']:
-            event.datetime = params['datetime']
         if params['category_id']:
             event.category_id = params['category_id']
         if params['country_id']:
-            event.country_id = params['country_id']
+            event.country_id = country.id
 
         event.save()
 

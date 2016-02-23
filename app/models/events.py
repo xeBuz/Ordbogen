@@ -1,3 +1,5 @@
+import time
+import datetime
 from app import db
 from app.models.countries import Country
 from .base import BaseModel
@@ -16,7 +18,7 @@ class Event(BaseModel):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(128))
     description = db.Column(db.Text)
-    datetime = db.Column(db.DateTime)
+    datetime = db.Column(db.Integer, default=time.time())
     category_id = db.Column(db.Integer, db.ForeignKey(EventCategory.id))
     category = db.relation(EventCategory)
     country_id = db.Column(db.Integer, db.ForeignKey(Country.id))
@@ -26,12 +28,17 @@ class Event(BaseModel):
         return self.title
 
     @property
+    def readeable_datetime(self):
+        value = datetime.datetime.fromtimestamp(self.datetime)
+        return value.strftime('%Y-%m-%d %H:%M:%S')
+
+    @property
     def serialize(self):
         return {
             'id': self.id,
             'title': self.title,
             'description': self.description,
-            'datetime': self.datetime,
+            'datetime': self.readeable_datetime,
             'country': {
                 'iso_code': self.country.iso_code,
                 'name': self.country.short_name
@@ -41,11 +48,12 @@ class Event(BaseModel):
 
     @staticmethod
     def required_fields():
-        return ['title', 'country_id', 'category_id']
+        return ['title', 'country_id']
 
     @staticmethod
     def get_columns():
         # In first iteration I use
         # Continent.__table__.columns.keys()
         # But I don't want all the columns, so I do it manually
-        return ['title', 'description', 'category_id', 'datetime', 'country_id']
+        return ['title', 'description', 'category_id', 'country_id']
+
