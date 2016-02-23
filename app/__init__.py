@@ -20,5 +20,5 @@ app.register_blueprint(continents)
 app.register_blueprint(countries)
 app.register_blueprint(events)
 
-from app.web.index import web_index
-app.register_blueprint(web_index)
+from app.web.web import website
+app.register_blueprint(website)

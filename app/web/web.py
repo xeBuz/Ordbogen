@@ -1,20 +1,40 @@
-from app.helper import APIOrdbogen
+from app.helper import get_color_stadistics
 from app.models.continents import Continent
 from app.models.countries import Country
 from flask import Blueprint, request, render_template
 
-web_index = Blueprint('/', __name__, url_prefix='/')
+website = Blueprint('/', __name__, url_prefix='/')
 
 
-@web_index.route('/', methods=['GET'])
+@website.route('/', methods=['GET'])
 def index():
     countries = Country.query.all()
 
     return render_template('index.html', countries=countries)
 
 
-@web_index.route('/list', methods=['GET'])
-def list_countries():
+@website.route('country', methods=['GET'])
+def get_countries():
     countries = Country.query.all()
 
     return render_template('list.html', countries=countries)
+
+
+@website.route('country/<string:iso_code>', methods=['GET'])
+def get_country(iso_code):
+    iso_code = str(iso_code).upper()
+    extras = {}
+    country = Country.query.filter_by(iso_code=iso_code).first()
+
+    if country is None:
+        return render_template('error/404.html')
+    else:
+
+        if country.population and country.population_urban:
+            extras['urban_population_percentage'] = 100 * float(country.population_urban) / float(country.population)
+            extras['urban_population_color'] = get_color_stadistics(extras['urban_population_percentage'])
+
+        if country.fertility:
+            extras['fertility_color'] = get_color_stadistics(country.fertility)
+
+        return render_template('country.html', country=country, extras=extras)
