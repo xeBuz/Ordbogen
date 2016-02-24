@@ -14,6 +14,11 @@ class Continent(BaseModel):
 
     @property
     def serialize(self):
+        """
+        Serialize the Model for the JSON responses
+
+        :return:
+        """
         return {
             'code': self.code,
             'name': self.name

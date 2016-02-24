@@ -11,6 +11,12 @@ countries = Blueprint('countries', __name__, url_prefix='/api/countries')
 class CountryAPI(MethodView, BaseController):
 
     def get(self, iso_code):
+        """
+        GET Method for Country/Countries
+
+        :param iso_code:
+        :return: JSON response
+        """
         allowed_sort = ['iso_code', 'short_name', 'country_code']
         if iso_code:
             pagination = None
@@ -47,6 +53,11 @@ class CountryAPI(MethodView, BaseController):
 
     @login_required()
     def post(self):
+        """
+        POST Method for Country. Login required
+
+        :return: JSON response
+        """
         errors = []
         try:
             self.validate_fields(Country.required_fields(), request.form)
@@ -100,6 +111,12 @@ class CountryAPI(MethodView, BaseController):
 
     @login_required()
     def delete(self, iso_code):
+        """
+        DELETE Method for Country. Login required
+
+        :param iso_code:
+        :return: JSON response
+        """
         country = Country.query.filter_by(iso_code=iso_code).first()
         if country is None:
             return self.response(404)
@@ -109,6 +126,12 @@ class CountryAPI(MethodView, BaseController):
 
     @login_required()
     def put(self, iso_code):
+        """
+        PUT Method for Country. Login required
+
+        :param iso_code:
+        :return: JSON response
+        """
         errors = []
         iso_code = str(iso_code).upper()
         country = Country.query.filter_by(iso_code=iso_code).first()

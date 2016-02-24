@@ -10,6 +10,12 @@ continents = Blueprint('continents', __name__, url_prefix='/api/continents')
 class ContinentAPI(MethodView, BaseController):
 
     def get(self, code):
+        """
+        GET Method for Continents
+
+        :param code:
+        :return: JSON response
+        """
         if code:
             query_continents = Continent.query.filter_by(code=code).first()
 
@@ -26,6 +32,11 @@ class ContinentAPI(MethodView, BaseController):
 
     @login_required()
     def post(self):
+        """
+        POST Method for Continents. Login required
+
+        :return: JSON response
+        """
         try:
             self.validate_fields(Continent.required_fields(), request.form)
         except ValueError:
@@ -47,6 +58,12 @@ class ContinentAPI(MethodView, BaseController):
 
     @login_required()
     def delete(self, code):
+        """
+        DELETE Method for Continents. Login required
+
+        :param code:
+        :return: JSON response
+        """
         continent = Continent.query.filter_by(code=code).first()
         if continent is None:
             return self.response(404)
@@ -56,6 +73,12 @@ class ContinentAPI(MethodView, BaseController):
 
     @login_required()
     def put(self, code):
+        """
+        PUT Method for Continents. Login required
+
+        :param code:
+        :return: JSON response
+        """
         continent = Continent.query.filter_by(code=code).first()
         if continent is None:
             return self.response(404)
@@ -66,6 +89,7 @@ class ContinentAPI(MethodView, BaseController):
 
         continent.save()
         return self.response(200)
+
 
 continent_view = ContinentAPI.as_view('continent_api')
 continents.add_url_rule('/', defaults={'code': None}, view_func=continent_view, methods=['GET'])

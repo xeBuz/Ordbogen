@@ -12,6 +12,12 @@ class EventAPI(MethodView, BaseController):
 
     @login_required()
     def get(self, event_id):
+        """
+        GET Method for Events. Login required
+
+        :param event_id:
+        :return: JSON response
+        """
         if event_id:
             pagination = None
             query_events = Event.query.filter_by(id=event_id).first()
@@ -47,6 +53,11 @@ class EventAPI(MethodView, BaseController):
 
     @login_required()
     def post(self):
+        """
+        POST Method for Event. Login required
+
+        :return: JSON response
+        """
         try:
             self.validate_fields(Event.required_fields(), request.form)
         except ValueError:
@@ -75,6 +86,12 @@ class EventAPI(MethodView, BaseController):
 
     @login_required()
     def delete(self, event_id):
+        """
+        DELETE Method for Event. Login required
+
+        :param event_id:
+        :return: JSON response
+        """
         event = Event.query.filter_by(id=event_id).first()
         if event is None:
             return self.response(404)
@@ -84,6 +101,12 @@ class EventAPI(MethodView, BaseController):
 
     @login_required()
     def put(self, event_id):
+        """
+        PUT Method for Event. Login required
+
+        :param event_id:
+        :return: JSON response
+        """
         event = Event.query.filter_by(id=event_id).first()
         if event is None:
             return self.response(404)

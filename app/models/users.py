@@ -22,6 +22,11 @@ class Users(BaseModel):
 
     @property
     def serialize(self):
+        """
+        Serialize the Model for the JSON responses
+
+        :return:
+        """
         return {
             'id': self.id,
             'name': self.name,

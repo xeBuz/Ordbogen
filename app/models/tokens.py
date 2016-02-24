@@ -29,9 +29,14 @@ class Tokens(BaseModel):
 
     @property
     def serialize(self):
+        """
+        Serialize the Model for the JSON responses
+
+        :return:
+        """
         return {
             'access_key': self.key,
-            'expiration': self.readeable_expiration,
+            'expiration': self.readable_expiration,
             'user': {
                 'name': self.user.name,
                 'e-mail': self.user.mail
@@ -39,11 +44,20 @@ class Tokens(BaseModel):
         }
 
     @property
-    def readeable_expiration(self):
+    def readable_expiration(self):
+        """
+        Convert the timestamp in a human readable value
+
+        :return:
+        """
         value = datetime.fromtimestamp(self.expiration)
         return value.strftime('%Y-%m-%d %H:%M:%S')
 
     def expired(self):
+        """
+        Validate if the current time is greater than the expiration date. If the time is greater, the token has expired
+        :return:
+        """
         now = time.time()
         if float(now) > float(self.expiration):
             self.delete()

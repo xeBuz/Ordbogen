@@ -11,6 +11,11 @@ login = Blueprint('login', __name__, url_prefix='/api/login')
 class TokenAPI(MethodView, BaseController):
 
     def post(self):
+        """
+        Create a Token for a valid User, providing e-mail and password
+
+        :return: JSON response
+        """
         validate = ['email', 'password']
         try:
             self.validate_fields(validate, request.form)
@@ -38,7 +43,7 @@ class TokenAPI(MethodView, BaseController):
                 'name': token.user.name,
                 'e-mail': token.user.email,
             },
-            'expiration': token.readeable_expiration
+            'expiration': token.readable_expiration
         }
 
         return self.response(200, json_response)
@@ -62,6 +67,12 @@ login.add_url_rule('/', view_func=token_view, methods=['POST'])
 
 
 def login_required():
+    """
+    Decorator for validate the Token provided in the HTTP Headers
+
+    :return: JSON response on error
+    """
+
     def decorator(f):
         @wraps(f)
         def validate_token(*args, **kwargs):

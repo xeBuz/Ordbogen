@@ -39,6 +39,11 @@ class Country(BaseModel):
 
     @property
     def serialize(self):
+        """
+        Serialize the Model for the JSON responses
+
+        :return:
+        """
         return {
             'iso_code': self.iso_code,
             'iso_code_long': self.iso_code_long,

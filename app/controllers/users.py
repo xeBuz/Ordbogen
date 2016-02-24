@@ -9,6 +9,12 @@ users = Blueprint('users', __name__, url_prefix='/api/users')
 class UsersAPI(MethodView, BaseController):
 
     def get(self, user_id):
+        """
+        GET Method for User/Users
+
+        :param user_id:
+        :return: JSON response
+        """
         if user_id:
             pagination = None
             query_users = Users.query.filter_by(id=user_id).first()
@@ -28,6 +34,11 @@ class UsersAPI(MethodView, BaseController):
         return self.response(200, query_users, pagination)
 
     def post(self):
+        """
+        POST Method for User
+
+        :return: JSON response
+        """
         try:
             self.validate_fields(Users.required_fields(), request.form)
         except ValueError:
@@ -45,6 +56,12 @@ class UsersAPI(MethodView, BaseController):
         return self.response(201)
 
     def delete(self, user_id):
+        """
+        DELETE Method for User
+
+        :param user_id:
+        :return: JSON response
+        """
         user = Users.query.filter_by(id=user_id).first()
         if user is None:
             return self.response(404)

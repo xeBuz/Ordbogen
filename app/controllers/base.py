@@ -14,17 +14,32 @@ class BaseController(object):
         self.success = False
 
     def _set_success(self, code):
+        """
+        Set self.success depending of the status code.
+        False should be a Client Error or a Server Error response
+
+        :param code: HTTP status code
+        """
         self.success = True if code < 400 else False
         self.json['success'] = self.success
 
     def _set_status(self, code):
+        """
+        Set the status property, with code and message
+
+        :param code: HTTP status code
+        """
         self.json['status'] = {
             'code': code,
             'message': http_code.get(code, None)
         }
 
     def _set_data(self, data):
+        """
+        Set the data property. It could be 'data' for valid responses or 'error' for errors
 
+        :param data:
+        """
         if data:
             if self.success:
                 if isinstance(data, list):
@@ -40,6 +55,11 @@ class BaseController(object):
                 }
 
     def _set_pagination(self, pagination):
+        """
+        Set the pagination property, with links for: first, prev, next and last page
+
+        :param pagination:
+        """
         if pagination:
             pagination_links = {}
             count = len(pagination.items)
@@ -57,6 +77,14 @@ class BaseController(object):
 
     def response(self, code=200, data=None, pagination=None):
 
+        """
+        Build the JSON response
+
+        :param code: HTTP code
+        :param data: Body response
+        :param pagination: Pagination object
+        :return: JSON response
+        """
         self._set_success(code)
         self._set_status(code)
         self._set_data(data)
@@ -66,11 +94,25 @@ class BaseController(object):
 
     @staticmethod
     def validate_fields(required_fields, provided_fields):
+        """
+        Check if the required_fields are presents in provided_fields.
+        Raise a ValueError on error
+
+        :param required_fields:
+        :param provided_fields:
+        """
         if not all(x in provided_fields for x in required_fields):
             raise ValueError
 
     @staticmethod
     def get_form_values(fields, form_request):
+        """
+        Create a dictionary with the fields (from the Model) sent in the form request
+
+        :param fields: array
+        :param form_request: array
+        :return: array
+        """
         params = {}
 
         for field in fields:

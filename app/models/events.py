@@ -28,17 +28,27 @@ class Event(BaseModel):
         return self.title
 
     @property
-    def readeable_datetime(self):
+    def readable_datetime(self):
+        """
+        Convert the timestamp in a human readable value
+
+        :return:
+        """
         value = datetime.datetime.fromtimestamp(self.datetime)
         return value.strftime('%Y-%m-%d %H:%M:%S')
 
     @property
     def serialize(self):
+        """
+        Serialize the Model for the JSON responses
+
+        :return:
+        """
         return {
             'id': self.id,
             'title': self.title,
             'description': self.description,
-            'datetime': self.readeable_datetime,
+            'datetime': self.readable_datetime,
             'country': {
                 'iso_code': self.country.iso_code,
                 'name': self.country.short_name
