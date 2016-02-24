@@ -1,4 +1,5 @@
 from app.models.countries import Country
+from app.models.events import Event
 from flask import Blueprint, render_template
 
 website = Blueprint('/', __name__, url_prefix='/')
@@ -27,6 +28,7 @@ def get_country(iso_code):
     if country is None:
         return render_template('error/404.html')
     else:
+        events = Event.query.filter_by(country_id=country.iso_code).all()
 
         if country.population and country.population_urban:
             extras['urban_population_percentage'] = 100 * float(country.population_urban) / float(country.population)
@@ -35,7 +37,7 @@ def get_country(iso_code):
         if country.fertility:
             extras['fertility_color'] = get_color_stadistics(country.fertility)
 
-        return render_template('country.html', country=country, extras=extras)
+        return render_template('country.html', country=country, events=events, extras=extras)
 
 
 def get_color_stadistics(item):
