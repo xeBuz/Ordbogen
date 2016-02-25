@@ -44,7 +44,7 @@ def get_country(iso_code):
     if country is None:
         return render_template('error/404.html')
     else:
-        events = Event.query.filter_by(country_id=country.iso_code).all()
+        events = Event.query.filter_by(country_id=country.id).all()
 
         if country.population and country.population_urban:
             extras['urban_population_percentage'] = 100 * float(country.population_urban) / float(country.population)

@@ -88,7 +88,7 @@
                             </div>
 
                             <div class="sixteen wide column centered">
-                                <div class="ui {{extras.urban_population_color}} tiny progress" data-percent="{{extras.urban_population_percentage}}" id="progress-pupulation">
+                                <div class="ui {{extras.urban_population_color}} tiny progress" data-percent="{{extras.urban_population_percentage}}" id="progress-population">
                                     <div class="bar"></div>
                                 </div>
                             </div>
@@ -120,7 +120,34 @@
                         </div>
 
                     </div>
+
+                      {% if events %}
+                      <div class="events">
+                          <h2>Events for {{country.short_name}}</h2>
+
+                        {% for event in events %}
+
+                        <div class="ui
+                            {% if event.category_id == 1 %}
+                                red
+                            {% elif event.category_id == 2 %}
+                                green
+                            {% elif event.category_id == 3 %}
+                                yellow
+                            {% endif %}
+                            message">
+                            <div class="header">
+                            {{event.title}}
+                            </div>
+                            <p>{{event.description}}</p>
+                        </div>
+
+                        {% endfor %}
+
+                      </div>
+                      {% endif %}
                 </div>
+
             </div>
         </main>
     </body>
