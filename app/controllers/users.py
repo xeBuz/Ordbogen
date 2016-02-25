@@ -46,6 +46,10 @@ class UsersAPI(MethodView, BaseController):
 
         params = self.get_form_values(Users.get_columns(), request.form)
 
+        old_user = Users.query.filter_by(email=params['email']).first()
+        if old_user:
+            return self.response(400, ['e-mail already registered'])
+
         new_user = Users(
             name=params['name'],
             email=params['email'],

@@ -31,7 +31,7 @@ class TokenAPI(MethodView, BaseController):
             return self.response(401)
 
         old_token = Tokens.query.filter_by(user_id=user.id).first()
-        if old_token:
+        if old_token is not None:
             old_token.delete()
 
         token = Tokens(user_id=user.id)
