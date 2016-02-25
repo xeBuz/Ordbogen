@@ -8,7 +8,7 @@ git clone git@github.com:xeBuz/Ordbogen.git
 
 ## Activate virtualenv
 
-For a better, if you don't have `virtualenv` installed follow [this](http://virtualenv.readthedocs.org/en/latest/installation.html) steps.
+For a better usage activate `virtualenv`, if you don't have `virtualenv` installed follow [this](http://virtualenv.readthedocs.org/en/latest/installation.html) steps.
 
 ```bash
 cd Ordbogen;
@@ -27,7 +27,7 @@ An extra library is required for a easier method to run the tests, install `nose
 
 ## Run the Server
 
-The projects is Python2.7 and Python3.5 compatible. To run the server you must execute the following command
+The project is Python 2.7 and Python 3.5 compatible. To run the server you must execute the following command
 
 
 ```bash
