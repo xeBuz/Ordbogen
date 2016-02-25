@@ -1,4 +1,4 @@
-# Web Documentations
+# Web details
 
 ## List
 
