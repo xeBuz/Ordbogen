@@ -48,22 +48,17 @@ class TokenAPI(MethodView, BaseController):
 
         return self.response(200, json_response)
 
-    # @staticmethod
-    # def logout():
-    #     token = Tokens.query.filter(Tokens.key == request.headers['Authorization']).first()
-    #
-    #     if token:
-    #         token.delete()
-    #
-    #     return jsonify({'metadata': {
-    #             'code': 200,
-    #             'message': 'OK'
-    #         }}, 200)
+    def delete(self):
+        token = Tokens.query.filter(Tokens.key == request.headers['Authorization']).first()
+
+        if token:
+            token.delete()
+
+        return self.response(200)
 
 
 token_view = TokenAPI.as_view('token_api')
-login.add_url_rule('/', view_func=token_view, methods=['POST'])
-# login.add_url_rule('/logout', view_func=TokenAPI.logout(), methods=['POST'])
+login.add_url_rule('/', view_func=token_view, methods=['POST', 'DELETE'])
 
 
 def login_required():
