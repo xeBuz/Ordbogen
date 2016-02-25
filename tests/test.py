@@ -5,6 +5,7 @@ from app.models.continents import Continent
 from app.models.countries import Country
 from app.models.events import Event
 from app.models.users import Users
+from app.models.tokens import Tokens
 from flask import json
 
 
@@ -16,6 +17,11 @@ class OrdbogenTestCase(unittest.TestCase):
 
     country = {}
     continent = {}
+
+    event_id = None
+    country_id = None
+    token = None
+    header = {}
 
     def setUp(self):
         self.app = app.test_client()
@@ -67,11 +73,17 @@ class OrdbogenTestCase(unittest.TestCase):
             'password': 'Valandil123'
         }
 
-        self.event_id = None
-        self.country_id = None
-
     def tearDown(self):
         pass
+
+    def test_00_token_new(self):
+        token = Tokens(user_id=1)
+        token.save()
+
+        OrdbogenTestCase.token = token.key
+        OrdbogenTestCase.header['Authorization'] = token.key
+
+        self.assertIsNotNone(token.key)
 
     def test_01_contintent_new(self):
         new_continent = Continent(code=self.continent['code'], name=self.continent['name'])
@@ -93,7 +105,7 @@ class OrdbogenTestCase(unittest.TestCase):
         self.assertIsNone(continent)
 
     def test_04_continent_post(self):
-        response = self.app.post('/api/continents/', data=self.continent)
+        response = self.app.post('/api/continents/', data=self.continent, headers=self.header)
         data = json.loads(response.data)
         self.assertEqual(data['status']['code'], 201)
 
@@ -122,11 +134,10 @@ class OrdbogenTestCase(unittest.TestCase):
         data = json.loads(response.data)
         self.assertEqual(data['status']['code'], 404)
 
-    def test_08s_continent_put(self):
+    def test_08_continent_put(self):
         fake = {'name': 'Mordor'}
         original = {'name': self.continent['name']}
-
-        response = self.app.put('/api/continents/' + str(self.continent['code']), data=fake)
+        response = self.app.put('/api/continents/' + str(self.continent['code']), data=fake, headers=self.header)
         data = json.loads(response.data)
         self.assertEqual(data['status']['code'], 200)
 
@@ -134,7 +145,7 @@ class OrdbogenTestCase(unittest.TestCase):
         data = json.loads(response.data)
         self.assertEqual(data['data']['name'], fake['name'])
 
-        response = self.app.put('/api/continents/' + str(self.continent['code']), data=original)
+        response = self.app.put('/api/continents/' + str(self.continent['code']), data=original, headers=self.header)
         data = json.loads(response.data)
         self.assertEqual(data['status']['code'], 200)
 
@@ -205,7 +216,7 @@ class OrdbogenTestCase(unittest.TestCase):
         self.assertIsNone(country)
 
     def test_12_country_post(self):
-        response = self.app.post('/api/countries/', data=self.country)
+        response = self.app.post('/api/countries/', data=self.country, headers=self.header)
         data = json.loads(response.data)
         self.assertEqual(data['status']['code'], 201)
 
@@ -258,7 +269,7 @@ class OrdbogenTestCase(unittest.TestCase):
             'area': self.country['area']
         }
 
-        response = self.app.put('/api/countries/' + str(self.country['iso_code']), data=fake)
+        response = self.app.put('/api/countries/' + str(self.country['iso_code']), data=fake, headers=self.header)
         data = json.loads(response.data)
         self.assertEqual(data['status']['code'], 200)
 
@@ -267,48 +278,52 @@ class OrdbogenTestCase(unittest.TestCase):
         self.assertEqual(data['data']['formal_name'], fake['formal_name'])
         self.assertEqual(data['data']['area'], fake['area'])
 
-        response = self.app.put('/api/countries/' + str(self.country['iso_code']), data=original)
+        response = self.app.put('/api/countries/' + str(self.country['iso_code']), data=original, headers=self.header)
         data = json.loads(response.data)
         self.assertEqual(data['status']['code'], 200)
 
     def test_16_event_post(self):
-        response = self.app.post('/api/events/', data=self.event)
+        response = self.app.post('/api/events/', data=self.event, headers=self.header)
         data = json.loads(response.data)
         self.assertEqual(data['status']['code'], 201)
 
     def test_17_event_get_all(self):
-        response = self.app.get('/api/countries/')
+        response = self.app.get('/api/countries/', headers=self.header)
         data = json.loads(response.data)
         self.assertEqual(data['status']['code'], 200)
         self.assertEqual(data['status']['message'], 'OK')
 
     def test_18_user_add(self):
-        response = self.app.post('/api/users/', data=self.user)
+        response = self.app.post('/api/users/', data=self.user, headers=self.header)
         data = json.loads(response.data)
         self.assertEqual(data['status']['code'], 201)
 
     def test_96_user_delete(self):
         user = Users.query.filter_by(name=self.user['name']).first()
-        response = self.app.delete('/api/users/' + str(user.id))
+        response = self.app.delete('/api/users/' + str(user.id), headers=self.header)
         data = json.loads(response.data)
         self.assertEqual(data['status']['code'], 200)
 
     def test_97_event_delete(self):
         event = Event.query.filter_by(title=self.event['title']).first()
-        response = self.app.delete('/api/events/' + str(event.id))
+        response = self.app.delete('/api/events/' + str(event.id), headers=self.header)
         data = json.loads(response.data)
         self.assertEqual(data['status']['code'], 200)
 
     def test_98_country_delete(self):
-        response = self.app.delete('/api/countries/' + str(self.country['iso_code']))
+        response = self.app.delete('/api/countries/' + str(self.country['iso_code']), headers=self.header)
         data = json.loads(response.data)
         self.assertEqual(data['status']['code'], 200)
 
     def test_99_continent_api_delete(self):
-        response = self.app.delete('/api/continents/' + str(self.continent['code']))
+        response = self.app.delete('/api/continents/' + str(self.continent['code']), headers=self.header)
         data = json.loads(response.data)
         self.assertEqual(data['status']['code'], 200)
 
+    def test_99_remove_toke(self):
+        token = Tokens.query.filter_by(user_id=1).first()
+        if token:
+            token.delete()
 
 if __name__ == '__main__':
     unittest.main()
