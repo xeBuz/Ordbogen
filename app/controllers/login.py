@@ -1,7 +1,7 @@
 from functools import wraps
 from app.models.tokens import Tokens
 from app.models.users import Users
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, jsonify, make_response
 from flask.views import MethodView
 from .base import BaseController
 
@@ -76,7 +76,10 @@ def login_required():
     def decorator(f):
         @wraps(f)
         def validate_token(*args, **kwargs):
-            token = Tokens.query.filter_by(key=request.headers['Authorization']).first()
+            token = None
+            if request.headers.get('Authorization'):
+                token = Tokens.query.filter_by(key=request.headers['Authorization']).first()
+
             error = None
             response = {
                 'status': {
@@ -95,7 +98,7 @@ def login_required():
 
             if error:
                 response['status']['message'] = error
-                return jsonify(response)
+                return make_response(jsonify(response), 401)
 
             return f(*args, **kwargs)
         return validate_token
