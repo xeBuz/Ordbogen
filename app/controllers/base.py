@@ -90,7 +90,11 @@ class BaseController(object):
         self._set_data(data)
         self._set_pagination(pagination)
 
-        return jsonify(self.json), code
+        return jsonify(self.json), code, \
+               {
+                   'Access-Control-Allow-Origin': '*',
+                   'Access-Control-Allow-Headers': 'accept, content-type, Authorization, Origin, X-Requested-With, Content-Type, Accept'
+               }
 
     @staticmethod
     def validate_fields(required_fields, provided_fields):
