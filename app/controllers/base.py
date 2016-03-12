@@ -75,6 +75,12 @@ class BaseController(object):
 
             self.json['links'] = pagination_links
 
+    def _set_cors(self):
+        return {
+            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Headers': 'accept, content-type, Authorization, Origin, X-Requested-With, Content-Type, Accept'
+        }
+
     def response(self, code=200, data=None, pagination=None):
 
         """
@@ -90,11 +96,8 @@ class BaseController(object):
         self._set_data(data)
         self._set_pagination(pagination)
 
-        return jsonify(self.json), code, \
-               {
-                   'Access-Control-Allow-Origin': '*',
-                   'Access-Control-Allow-Headers': 'accept, content-type, Authorization, Origin, X-Requested-With, Content-Type, Accept'
-               }
+        return jsonify(self.json), code, self._set_cors()
+
 
     @staticmethod
     def validate_fields(required_fields, provided_fields):
