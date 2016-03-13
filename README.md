@@ -24,6 +24,6 @@ tests/
 
 # Extra Documentation
 
-- [Local Environment](/docs/01_local_enviroment.md)
+- [Local Environment](/docs/01_local_environment.md)
 - [API Documentation](/docs/02_api_documentation.md)
 - [Web Documentation](/docs/03_web_documentation.md)
