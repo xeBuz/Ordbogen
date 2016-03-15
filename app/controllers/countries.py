@@ -51,7 +51,7 @@ class CountryAPI(MethodView, BaseController):
 
         return self.response(200, query_countries, pagination)
 
-    @login_required()
+    # @login_required()
     def post(self):
         """
         POST Method for Country. Login required
@@ -197,8 +197,8 @@ class CountryAPI(MethodView, BaseController):
         return self.response(200)
 
 country_view = CountryAPI.as_view('country_api')
-countries.add_url_rule('/', defaults={'iso_code': None}, view_func=country_view, methods=['GET'])
 countries.add_url_rule('/', view_func=country_view, methods=['POST'])
+countries.add_url_rule('/', defaults={'iso_code': None}, view_func=country_view, methods=['GET'])
 countries.add_url_rule('/<string:iso_code>', view_func=country_view, methods=['GET', 'PUT', 'DELETE'])
 
 

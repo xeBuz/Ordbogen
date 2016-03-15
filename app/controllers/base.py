@@ -78,7 +78,9 @@ class BaseController(object):
     def _set_cors(self):
         return {
             'Access-Control-Allow-Origin': '*',
-            'Access-Control-Allow-Headers': 'accept, content-type, Authorization, Origin, X-Requested-With, Content-Type, Accept'
+            'Access-Control-Allow-Headers': 'Content-Type',
+            'Access-Control-Request-Headers': 'X-Requested-With, accept, content-type',
+            'Access-Control-Allow-Methods': 'GET, POST, PUT'
         }
 
     def response(self, code=200, data=None, pagination=None):
